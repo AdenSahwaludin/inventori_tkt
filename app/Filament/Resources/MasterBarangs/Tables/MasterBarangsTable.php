@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\MasterBarangs\Tables;
 
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -53,6 +54,11 @@ class MasterBarangsTable
             ->recordActions([
                 ViewAction::make(),
                 EditAction::make(),
+                Action::make('lihat_unit')
+                    ->label('Lihat Unit')
+                    ->icon('heroicon-o-archive-box')
+                    ->url(fn ($record) => route('filament.admin.resources.unit-barangs.index', ['search' => $record->kode_master]))
+                    ->color('info'),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

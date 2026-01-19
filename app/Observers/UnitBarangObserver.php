@@ -36,20 +36,21 @@ class UnitBarangObserver
      */
     public function updating(UnitBarang $unit): void
     {
-        // Cek apakah lokasi_id berubah
-        if ($unit->isDirty('lokasi_id')) {
-            $lokasiAsal = $unit->getOriginal('lokasi_id');
-            $lokasiTujuan = $unit->lokasi_id;
+        // Cek apakah ruang_id berubah
+        if ($unit->isDirty('ruang_id')) {
+            $ruangAsal = $unit->getOriginal('ruang_id');
+            $ruangTujuan = $unit->ruang_id;
 
-            // Hanya buat mutasi jika lokasi asal ada (bukan unit baru)
-            if ($lokasiAsal) {
+            // Hanya buat mutasi jika ruang asal ada (bukan unit baru)
+            if ($ruangAsal) {
                 MutasiLokasi::create([
                     'unit_barang_id' => $unit->kode_unit,
-                    'lokasi_asal' => $lokasiAsal,
-                    'lokasi_tujuan' => $lokasiTujuan,
+                    'ruang_asal_id' => $ruangAsal,
+                    'ruang_tujuan_id' => $ruangTujuan,
                     'tanggal_mutasi' => now()->toDateString(),
                     'user_id' => auth()->id() ?? 1,
-                    'keterangan' => 'Mutasi lokasi via admin panel',
+                    'tipe_mutasi' => MutasiLokasi::TIPE_MANUAL,
+                    'keterangan' => 'Mutasi ruang via admin panel',
                 ]);
             }
         }

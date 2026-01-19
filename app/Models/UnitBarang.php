@@ -54,11 +54,12 @@ class UnitBarang extends Model
     protected $fillable = [
         'kode_unit',
         'master_barang_id',
-        'lokasi_id',
+        'ruang_id',
         'status',
         'is_active',
         'tanggal_pembelian',
         'catatan',
+        'created_by',
     ];
 
     /**
@@ -165,11 +166,11 @@ class UnitBarang extends Model
     }
 
     /**
-     * Get the lokasi where this unit is stored.
+     * Get the ruang where this unit is stored.
      */
-    public function lokasi(): BelongsTo
+    public function ruang(): BelongsTo
     {
-        return $this->belongsTo(Lokasi::class, 'lokasi_id', 'kode_lokasi');
+        return $this->belongsTo(Ruang::class, 'ruang_id', 'id');
     }
 
     /**
@@ -189,9 +190,9 @@ class UnitBarang extends Model
     }
 
     /**
-     * Get all mutasi lokasi for this unit.
+     * Get all mutasi ruang for this unit.
      */
-    public function mutasiLokasi(): HasMany
+    public function mutasiRuang(): HasMany
     {
         return $this->hasMany(MutasiLokasi::class, 'unit_barang_id', 'kode_unit');
     }
@@ -213,11 +214,11 @@ class UnitBarang extends Model
     }
 
     /**
-     * Accessor: Get lokasi name.
+     * Accessor: Get ruang name.
      */
-    public function getNamaLokasiAttribute(): string
+    public function getNamaRuangAttribute(): string
     {
-        return $this->lokasi?->nama_lokasi ?? '-';
+        return $this->ruang?->nama_ruang ?? '-';
     }
 
     /**

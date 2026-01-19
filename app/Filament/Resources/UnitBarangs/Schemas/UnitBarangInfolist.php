@@ -14,7 +14,7 @@ class UnitBarangInfolist
             ->components([
                 TextEntry::make('kode_unit'),
                 TextEntry::make('masterBarang.kode_master'),
-                TextEntry::make('lokasi.kode_lokasi'),
+                TextEntry::make('ruang.nama_ruang'),
                 TextEntry::make('status'),
                 IconEntry::make('is_active')
                     ->boolean(),

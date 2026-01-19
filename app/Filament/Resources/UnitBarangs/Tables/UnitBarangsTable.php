@@ -29,8 +29,8 @@ class UnitBarangsTable
                     ->label('Nama Barang')
                     ->searchable()
                     ->wrap(),
-                TextColumn::make('lokasi.nama_lokasi')
-                    ->label('Lokasi')
+                TextColumn::make('ruang.nama_ruang')
+                    ->label('Ruang')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('status')
@@ -78,9 +78,9 @@ class UnitBarangsTable
                         'rusak' => 'Rusak',
                         'maintenance' => 'Maintenance',
                     ]),
-                SelectFilter::make('lokasi_id')
-                    ->label('Lokasi')
-                    ->relationship('lokasi', 'nama_lokasi')
+                SelectFilter::make('ruang_id')
+                    ->label('Ruang')
+                    ->relationship('ruang', 'nama_ruang')
                     ->searchable()
                     ->preload(),
             ])

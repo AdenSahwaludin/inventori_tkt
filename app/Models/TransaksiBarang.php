@@ -28,7 +28,7 @@ class TransaksiBarang extends Model
     protected $fillable = [
         'kode_transaksi',
         'master_barang_id',
-        'lokasi_tujuan',
+        'ruang_tujuan_id',
         'tanggal_transaksi',
         'jumlah',
         'penanggung_jawab',
@@ -133,11 +133,11 @@ class TransaksiBarang extends Model
     }
 
     /**
-     * Get the target lokasi for this transaction.
+     * Get the target ruang for this transaction.
      */
-    public function lokasiTujuan(): BelongsTo
+    public function ruangTujuan(): BelongsTo
     {
-        return $this->belongsTo(Lokasi::class, 'lokasi_tujuan', 'kode_lokasi');
+        return $this->belongsTo(Ruang::class, 'ruang_tujuan_id', 'id');
     }
 
     /**
@@ -197,10 +197,10 @@ class TransaksiBarang extends Model
     }
 
     /**
-     * Accessor: Get nama lokasi tujuan.
+     * Accessor: Get nama ruang tujuan.
      */
-    public function getNamaLokasiTujuanAttribute(): string
+    public function getNamaRuangTujuanAttribute(): string
     {
-        return $this->lokasiTujuan?->nama_lokasi ?? '-';
+        return $this->ruangTujuan?->nama_ruang ?? '-';
     }
 }

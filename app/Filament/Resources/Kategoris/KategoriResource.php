@@ -27,9 +27,9 @@ class KategoriResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'nama_kategori';
 
-    protected static string|UnitEnum|null $navigationGroup = 'Master Data';
+    protected static string|UnitEnum|null $navigationGroup = 'Inventaris';
 
-    protected static ?int $navigationSort = 1;
+    protected static ?int $navigationSort = 3;
 
     public static function form(Schema $schema): Schema
     {

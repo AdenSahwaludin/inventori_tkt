@@ -69,7 +69,7 @@ class TransaksiBarangObserver
         for ($i = 0; $i < $transaksi->jumlah; $i++) {
             UnitBarang::create([
                 'master_barang_id' => $transaksi->master_barang_id,
-                'lokasi_id' => $transaksi->lokasi_tujuan,
+                'ruang_id' => $transaksi->ruang_tujuan_id,
                 'status' => UnitBarang::STATUS_BAIK,
                 'is_active' => true,
                 'tanggal_pembelian' => $transaksi->tanggal_transaksi,

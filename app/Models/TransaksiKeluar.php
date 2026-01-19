@@ -22,15 +22,37 @@ class TransaksiKeluar extends Model
     protected $table = 'transaksi_keluar';
 
     /**
+     * Tipe transaksi constants.
+     */
+    public const TIPE_PEMINDAHAN = 'pemindahan';
+
+    public const TIPE_PEMINJAMAN = 'peminjaman';
+
+    public const TIPE_PENGGUNAAN = 'penggunaan';
+
+    public const TIPE_PENGHAPUSAN = 'penghapusan';
+
+    public const TIPE_OPTIONS = [
+        self::TIPE_PEMINDAHAN => 'Pemindahan',
+        self::TIPE_PEMINJAMAN => 'Peminjaman',
+        self::TIPE_PENGGUNAAN => 'Penggunaan',
+        self::TIPE_PENGHAPUSAN => 'Penghapusan',
+    ];
+
+    /**
      * The attributes that are mass assignable.
      */
     protected $fillable = [
         'kode_transaksi',
         'unit_barang_id',
+        'ruang_asal_id',
+        'ruang_tujuan_id',
+        'tipe',
         'tanggal_transaksi',
         'penerima',
         'tujuan',
         'keterangan',
+        'catatan',
         'user_id',
         'approved_by',
         'approved_at',
@@ -127,6 +149,22 @@ class TransaksiKeluar extends Model
     public function unitBarang(): BelongsTo
     {
         return $this->belongsTo(UnitBarang::class, 'unit_barang_id', 'kode_unit');
+    }
+
+    /**
+     * Get the ruang asal for this transaction.
+     */
+    public function ruangAsal(): BelongsTo
+    {
+        return $this->belongsTo(Ruang::class, 'ruang_asal_id', 'id');
+    }
+
+    /**
+     * Get the ruang tujuan for this transaction.
+     */
+    public function ruangTujuan(): BelongsTo
+    {
+        return $this->belongsTo(Ruang::class, 'ruang_tujuan_id', 'id');
     }
 
     /**

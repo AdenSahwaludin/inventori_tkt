@@ -17,8 +17,8 @@ class UnitBarangForm
                 Select::make('master_barang_id')
                     ->relationship('masterBarang', 'kode_master')
                     ->required(),
-                Select::make('lokasi_id')
-                    ->relationship('lokasi', 'kode_lokasi')
+                Select::make('ruang_id')
+                    ->relationship('ruang', 'nama_ruang')
                     ->required(),
                 Select::make('status')
                     ->options([

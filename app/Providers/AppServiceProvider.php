@@ -3,10 +3,12 @@
 namespace App\Providers;
 
 use App\Models\BarangRusak;
+use App\Models\MasterBarang;
 use App\Models\TransaksiBarang;
 use App\Models\TransaksiKeluar;
 use App\Models\UnitBarang;
 use App\Observers\BarangRusakObserver;
+use App\Observers\MasterBarangObserver;
 use App\Observers\TransaksiBarangObserver;
 use App\Observers\TransaksiKeluarObserver;
 use App\Observers\UnitBarangObserver;
@@ -28,6 +30,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // Register Observers
+        MasterBarang::observe(MasterBarangObserver::class);
         TransaksiBarang::observe(TransaksiBarangObserver::class);
         TransaksiKeluar::observe(TransaksiKeluarObserver::class);
         UnitBarang::observe(UnitBarangObserver::class);

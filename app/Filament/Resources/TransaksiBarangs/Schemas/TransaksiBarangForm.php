@@ -18,7 +18,7 @@ class TransaksiBarangForm
                 TextInput::make('kode_transaksi')
                     ->required(),
                 Select::make('master_barang_id')
-                    ->relationship('masterBarang', 'kode_master')
+                    ->relationship('masterBarang', 'nama_barang')
                     ->required(),
                 TextInput::make('lokasi_tujuan')
                     ->required(),

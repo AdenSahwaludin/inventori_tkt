@@ -15,7 +15,7 @@ class UserSeeder extends Seeder
     {
         // 1. Admin
         $admin = User::firstOrCreate(
-            ['email' => 'admin@tkt.sch.id'],
+            ['email' => 'admin@gmail.com'],
             [
                 'name' => 'Administrator',
                 'password' => Hash::make('password'),
@@ -26,7 +26,7 @@ class UserSeeder extends Seeder
 
         // 2. Kepala Sekolah
         $kepalaSekolah = User::firstOrCreate(
-            ['email' => 'kepala@tkt.sch.id'],
+            ['email' => 'kepala@gmail.com'],
             [
                 'name' => 'Kepala Sekolah TKT',
                 'password' => Hash::make('password'),
@@ -37,7 +37,7 @@ class UserSeeder extends Seeder
 
         // 3. Petugas Inventaris
         $petugas = User::firstOrCreate(
-            ['email' => 'petugas@tkt.sch.id'],
+            ['email' => 'petugas@gmail.com'],
             [
                 'name' => 'Petugas Inventaris',
                 'password' => Hash::make('password'),

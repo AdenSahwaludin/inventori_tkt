@@ -17,9 +17,11 @@ class MutasiLokasisTable
             ->columns([
                 TextColumn::make('unitBarang.kode_unit')
                     ->searchable(),
-                TextColumn::make('lokasi_asal')
+                TextColumn::make('ruangAsal.nama_ruang')
+                    ->label('Ruang Asal')
                     ->searchable(),
-                TextColumn::make('lokasi_tujuan')
+                TextColumn::make('ruangTujuan.nama_ruang')
+                    ->label('Ruang Tujuan')
                     ->searchable(),
                 TextColumn::make('tanggal_mutasi')
                     ->date()

@@ -29,7 +29,7 @@ class UnitBarangResource extends Resource
 
     protected static ?string $navigationLabel = 'Unit Barang';
 
-    protected static ?int $navigationSort = 4;
+    protected static ?int $navigationSort = 2;
 
     public static function form(Schema $schema): Schema
     {

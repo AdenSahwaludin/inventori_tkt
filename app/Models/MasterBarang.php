@@ -44,6 +44,8 @@ class MasterBarang extends Model
         'harga_satuan',
         'reorder_point',
         'deskripsi',
+        'distribusi_lokasi',
+        'created_by',
     ];
 
     /**
@@ -52,6 +54,7 @@ class MasterBarang extends Model
     protected $casts = [
         'harga_satuan' => 'decimal:2',
         'reorder_point' => 'integer',
+        'distribusi_lokasi' => 'array',
     ];
 
     /**
@@ -63,32 +66,46 @@ class MasterBarang extends Model
 
         static::creating(function ($masterBarang) {
             if (empty($masterBarang->kode_master)) {
-                $masterBarang->kode_master = self::generateKodeMaster($masterBarang->kategori_id);
+                $masterBarang->kode_master = self::generateKodeMaster(
+                    $masterBarang->nama_barang,
+                    $masterBarang->kategori_id
+                );
+            }
+            if (empty($masterBarang->created_by)) {
+                $masterBarang->created_by = auth()->id();
             }
         });
     }
 
     /**
-     * Generate kode master from kategori.
-     * Pattern: MB-{KATEGORI}-{SEQUENCE}
-     * Example: MB-ELK-001, MB-ELK-002
+     * Generate kode master from nama_barang & kategori.
+     * Pattern: NAM-KAT (3 huruf nama + 3 huruf kategori)
+     * Example: LAP-ELE, KUR-KAY, MES-OFI
      */
-    public static function generateKodeMaster(string $kategoriId): string
+    public static function generateKodeMaster(string $namaBarang, string $kategoriId): string
     {
-        $prefix = 'MB-'.$kategoriId.'-';
-
-        $lastKode = self::withTrashed()
-            ->where('kode_master', 'LIKE', $prefix.'%')
-            ->orderBy('kode_master', 'desc')
-            ->first();
-
-        if (! $lastKode) {
-            return $prefix.'001';
+        // Ambil 3 huruf pertama dari nama barang (tanpa spasi)
+        $namaCode = strtoupper(substr(preg_replace('/[^A-Za-z]/', '', $namaBarang), 0, 3));
+        if (strlen($namaCode) < 3) {
+            $namaCode = str_pad($namaCode, 3, 'X');
         }
 
-        $lastNumber = (int) substr($lastKode->kode_master, -3);
+        // Ambil 3 huruf pertama dari kode kategori
+        $kategoriCode = strtoupper(substr(preg_replace('/[^A-Za-z]/', '', $kategoriId), 0, 3));
+        if (strlen($kategoriCode) < 3) {
+            $kategoriCode = str_pad($kategoriCode, 3, 'X');
+        }
 
-        return $prefix.str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
+        $baseKode = $namaCode.'-'.$kategoriCode;
+        $kode = $baseKode;
+        $counter = 1;
+
+        // Jika duplikat, tambah suffix: LAP-ELE1, LAP-ELE2, dst
+        while (self::withTrashed()->where('kode_master', $kode)->exists()) {
+            $kode = $baseKode.$counter++;
+        }
+
+        return $kode;
     }
 
     /**

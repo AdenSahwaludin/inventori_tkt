@@ -26,7 +26,9 @@ class BarangRusak extends Model
      */
     protected $fillable = [
         'unit_barang_id',
+        'ruang_id',
         'tanggal_kejadian',
+        'tanggal_rusak',
         'keterangan',
         'penanggung_jawab',
         'user_id',
@@ -37,7 +39,16 @@ class BarangRusak extends Model
      */
     protected $casts = [
         'tanggal_kejadian' => 'date',
+        'tanggal_rusak' => 'date',
     ];
+
+    /**
+     * Get the ruang for this report.
+     */
+    public function ruang(): BelongsTo
+    {
+        return $this->belongsTo(Ruang::class, 'ruang_id', 'id');
+    }
 
     /**
      * Get the unit barang for this report.
@@ -72,10 +83,10 @@ class BarangRusak extends Model
     }
 
     /**
-     * Accessor: Get lokasi from unit.
+     * Accessor: Get ruang from unit.
      */
-    public function getLokasiAttribute(): string
+    public function getRuangAttribute(): string
     {
-        return $this->unitBarang?->nama_lokasi ?? '-';
+        return $this->unitBarang?->ruang?->nama_ruang ?? '-';
     }
 }

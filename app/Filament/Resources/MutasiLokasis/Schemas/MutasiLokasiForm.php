@@ -17,9 +17,11 @@ class MutasiLokasiForm
                 Select::make('unit_barang_id')
                     ->relationship('unitBarang', 'kode_unit')
                     ->required(),
-                TextInput::make('lokasi_asal')
+                Select::make('ruang_asal_id')
+                    ->relationship('ruangAsal', 'nama_ruang')
                     ->required(),
-                TextInput::make('lokasi_tujuan')
+                Select::make('ruang_tujuan_id')
+                    ->relationship('ruangTujuan', 'nama_ruang')
                     ->required(),
                 DatePicker::make('tanggal_mutasi')
                     ->required(),

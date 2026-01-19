@@ -12,8 +12,8 @@ class MutasiLokasiInfolist
         return $schema
             ->components([
                 TextEntry::make('unitBarang.kode_unit'),
-                TextEntry::make('lokasi_asal'),
-                TextEntry::make('lokasi_tujuan'),
+                TextEntry::make('ruangAsal.nama_ruang'),
+                TextEntry::make('ruangTujuan.nama_ruang'),
                 TextEntry::make('tanggal_mutasi')
                     ->date(),
                 TextEntry::make('user.name')

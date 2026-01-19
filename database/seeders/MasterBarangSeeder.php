@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Kategori;
-use App\Models\Lokasi;
 use App\Models\MasterBarang;
+use App\Models\Ruang;
 use App\Models\UnitBarang;
 use Illuminate\Database\Seeder;
 
@@ -15,11 +15,11 @@ class MasterBarangSeeder extends Seeder
      */
     public function run(): void
     {
-        // Get all kategoris and lokasis
+        // Get all kategoris and ruangs
         $kategoris = Kategori::all();
-        $lokasis = Lokasi::all();
+        $ruangs = Ruang::all();
 
-        if ($kategoris->isEmpty() || $lokasis->isEmpty()) {
+        if ($kategoris->isEmpty() || $ruangs->isEmpty()) {
             $this->command->warn('Please run KategoriSeeder and LokasiSeeder first!');
 
             return;
@@ -78,14 +78,14 @@ class MasterBarangSeeder extends Seeder
                 ]
             );
 
-            // Create 3-5 unit barang for each master in different lokasi
+            // Create 3-5 unit barang for each master in different ruangs
             $unitCount = rand(3, 5);
-            $selectedLokasis = $lokasis->random(min($unitCount, $lokasis->count()));
+            $selectedRuangs = $ruangs->random(min($unitCount, $ruangs->count()));
 
-            foreach ($selectedLokasis as $lokasi) {
+            foreach ($selectedRuangs as $ruang) {
                 UnitBarang::create([
                     'master_barang_id' => $masterBarang->kode_master,
-                    'lokasi_id' => $lokasi->kode_lokasi,
+                    'ruang_id' => $ruang->id,
                     'status' => UnitBarang::STATUS_BAIK,
                     'is_active' => true,
                     'tanggal_pembelian' => now()->subDays(rand(30, 365)),

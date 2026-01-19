@@ -9,8 +9,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * Model MutasiLokasi - Tracking Perpindahan Unit Barang.
  *
- * Tabel ini mencatat histori perpindahan lokasi untuk audit trail.
- * Record dibuat otomatis oleh UnitBarangObserver saat lokasi_id berubah.
+ * Tabel ini mencatat histori perpindahan ruang untuk audit trail.
+ * Record dibuat otomatis oleh UnitBarangObserver saat ruang_id berubah.
  */
 class MutasiLokasi extends Model
 {
@@ -22,13 +22,25 @@ class MutasiLokasi extends Model
     protected $table = 'mutasi_lokasi';
 
     /**
+     * Tipe mutasi constants.
+     */
+    public const TIPE_CREATE = 'create';
+
+    public const TIPE_TRANSAKSI_MASUK = 'transaksi_masuk';
+
+    public const TIPE_TRANSAKSI_KELUAR = 'transaksi_keluar';
+
+    public const TIPE_MANUAL = 'manual';
+
+    /**
      * The attributes that are mass assignable.
      */
     protected $fillable = [
         'unit_barang_id',
-        'lokasi_asal',
-        'lokasi_tujuan',
+        'ruang_asal_id',
+        'ruang_tujuan_id',
         'tanggal_mutasi',
+        'tipe_mutasi',
         'keterangan',
         'user_id',
     ];
@@ -49,19 +61,19 @@ class MutasiLokasi extends Model
     }
 
     /**
-     * Get the origin lokasi.
+     * Get the origin ruang.
      */
-    public function lokasiAsal(): BelongsTo
+    public function ruangAsal(): BelongsTo
     {
-        return $this->belongsTo(Lokasi::class, 'lokasi_asal', 'kode_lokasi');
+        return $this->belongsTo(Ruang::class, 'ruang_asal_id', 'id');
     }
 
     /**
-     * Get the destination lokasi.
+     * Get the destination ruang.
      */
-    public function lokasiTujuanRelation(): BelongsTo
+    public function ruangTujuan(): BelongsTo
     {
-        return $this->belongsTo(Lokasi::class, 'lokasi_tujuan', 'kode_lokasi');
+        return $this->belongsTo(Ruang::class, 'ruang_tujuan_id', 'id');
     }
 
     /**
@@ -89,18 +101,18 @@ class MutasiLokasi extends Model
     }
 
     /**
-     * Accessor: Get nama lokasi asal.
+     * Accessor: Get nama ruang asal.
      */
-    public function getNamaLokasiAsalAttribute(): string
+    public function getNamaRuangAsalAttribute(): string
     {
-        return $this->lokasiAsal?->nama_lokasi ?? '-';
+        return $this->ruangAsal?->nama_ruang ?? '-';
     }
 
     /**
-     * Accessor: Get nama lokasi tujuan.
+     * Accessor: Get nama ruang tujuan.
      */
-    public function getNamaLokasiTujuanAttribute(): string
+    public function getNamaRuangTujuanAttribute(): string
     {
-        return $this->lokasiTujuanRelation?->nama_lokasi ?? '-';
+        return $this->ruangTujuan?->nama_ruang ?? '-';
     }
 }

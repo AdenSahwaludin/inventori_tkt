@@ -2,12 +2,12 @@
 
 namespace App\Filament\Widgets;
 
-use App\Models\Lokasi;
+use App\Models\Ruang;
 use Filament\Widgets\ChartWidget;
 
 class BarangPerLokasiWidget extends ChartWidget
 {
-    protected ?string $heading = 'Distribusi Barang per Lokasi';
+    protected ?string $heading = 'Distribusi Barang per Ruang';
 
     protected static ?int $sort = 4;
 
@@ -15,17 +15,17 @@ class BarangPerLokasiWidget extends ChartWidget
 
     protected function getData(): array
     {
-        $lokasis = Lokasi::withCount(['unitBarang' => function ($query) {
+        $ruangs = Ruang::withCount(['unitBarangs' => function ($query) {
             $query->where('is_active', true);
         }])
-            ->orderByDesc('unit_barang_count')
+            ->orderByDesc('unit_barangs_count')
             ->take(8)
             ->get();
 
         return [
             'datasets' => [
                 [
-                    'data' => $lokasis->pluck('unit_barang_count')->toArray(),
+                    'data' => $ruangs->pluck('unit_barangs_count')->toArray(),
                     'backgroundColor' => [
                         'rgb(59, 130, 246)',   // blue
                         'rgb(16, 185, 129)',   // green
@@ -38,7 +38,7 @@ class BarangPerLokasiWidget extends ChartWidget
                     ],
                 ],
             ],
-            'labels' => $lokasis->pluck('nama_lokasi')->toArray(),
+            'labels' => $ruangs->pluck('nama_ruang')->toArray(),
         ];
     }
 
