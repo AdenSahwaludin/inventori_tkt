@@ -16,7 +16,10 @@ class TransaksiBarangForm
         return $schema
             ->components([
                 TextInput::make('kode_transaksi')
-                    ->required(),
+                    ->required()
+                    ->disabled()
+                    ->dehydrated()
+                    ->default(fn () => 'TRX-' . strtoupper(substr(uniqid(), -6))),
                 Select::make('master_barang_id')
                     ->relationship('masterBarang', 'nama_barang')
                     ->required(),
