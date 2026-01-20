@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Ruangs\Tables;
 
 use App\Filament\Resources\UnitBarangs\UnitBarangResource;
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -40,6 +41,11 @@ class RuangsTable
             ])
             ->recordActions([
                 ViewAction::make(),
+                Action::make('lihat_barang')
+                    ->label('Lihat Barang')
+                    ->icon('heroicon-o-eye')
+                    ->color('info')
+                    ->url(fn ($record) => UnitBarangResource::getUrl('index', ['tableFilters[ruang_id][value]' => $record->id])),
                 EditAction::make()
                     ->visible(fn () => auth()->user()->can('edit_ruangs')),
             ])
