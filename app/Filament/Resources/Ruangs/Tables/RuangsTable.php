@@ -45,7 +45,7 @@ class RuangsTable
                     ->label('Lihat Barang')
                     ->icon('heroicon-o-eye')
                     ->color('info')
-                    ->url(fn ($record) => UnitBarangResource::getUrl('index', ['tableFilters[ruang_id][value]' => $record->id])),
+                    ->url(fn ($record) => UnitBarangResource::getUrl('index', ['search' => $record->nama_ruang])),
                 EditAction::make()
                     ->visible(fn () => auth()->user()->can('edit_ruangs')),
             ])
