@@ -52,7 +52,7 @@ class TransaksiBarangObserver
     }
 
     /**
-     * Handle approval: Auto-generate unit_barang sebanyak jumlah.
+     * Handle approval: Auto-generate unit_barang sebanyak jumlah per ruang.
      */
     protected function handleApproval(TransaksiBarang $transaksi): void
     {
@@ -65,22 +65,37 @@ class TransaksiBarangObserver
         }
         $transaksi->saveQuietly();
 
-        // Generate unit_barang sebanyak jumlah
-        for ($i = 0; $i < $transaksi->jumlah; $i++) {
-            UnitBarang::create([
-                'master_barang_id' => $transaksi->master_barang_id,
-                'ruang_id' => $transaksi->ruang_tujuan_id,
-                'status' => UnitBarang::STATUS_BAIK,
-                'is_active' => true,
-                'tanggal_pembelian' => $transaksi->tanggal_transaksi,
-                'catatan' => 'Auto-generated dari transaksi: '.$transaksi->kode_transaksi,
-            ]);
+        // Generate unit_barang untuk setiap ruang sesuai distribusi_lokasi
+        $distribusiLokasi = $transaksi->distribusi_lokasi ?? [];
+        
+        foreach ($distribusiLokasi as $distribusi) {
+            $ruangId = $distribusi['ruang_id'] ?? null;
+            $jumlah = (int) ($distribusi['jumlah'] ?? 0);
+            
+            if (! $ruangId || $jumlah <= 0) {
+                continue;
+            }
+            
+            // Generate unit_barang sebanyak jumlah untuk ruang ini
+            for ($i = 0; $i < $jumlah; $i++) {
+                UnitBarang::create([
+                    'master_barang_id' => $transaksi->master_barang_id,
+                    'ruang_id' => $ruangId,
+                    'status' => UnitBarang::STATUS_BAIK,
+                    'is_active' => true,
+                    'tanggal_pembelian' => $transaksi->tanggal_transaksi,
+                    'catatan' => 'Auto-generated dari transaksi: '.$transaksi->kode_transaksi,
+                ]);
+            }
         }
+
+        // Hitung total jumlah dari semua distribusi
+        $totalJumlah = collect($distribusiLokasi)->sum('jumlah');
 
         // Log aktivitas approval
         LogAktivitas::log(
             LogAktivitas::TYPE_CREATE,
-            "Transaksi {$transaksi->kode_transaksi} disetujui. {$transaksi->jumlah} unit barang berhasil dibuat.",
+            "Transaksi {$transaksi->kode_transaksi} disetujui. {$totalJumlah} unit barang berhasil dibuat ke berbagai ruang.",
             'transaksi_barang',
             (string) $transaksi->id
         );

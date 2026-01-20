@@ -28,9 +28,8 @@ class TransaksiBarang extends Model
     protected $fillable = [
         'kode_transaksi',
         'master_barang_id',
-        'ruang_tujuan_id',
+        'distribusi_lokasi',
         'tanggal_transaksi',
-        'jumlah',
         'penanggung_jawab',
         'keterangan',
         'user_id',
@@ -46,7 +45,7 @@ class TransaksiBarang extends Model
     protected $casts = [
         'tanggal_transaksi' => 'date',
         'approved_at' => 'datetime',
-        'jumlah' => 'integer',
+        'distribusi_lokasi' => 'json',
     ];
 
     /**

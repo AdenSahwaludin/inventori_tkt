@@ -2,8 +2,10 @@
 
 namespace App\Filament\Resources\TransaksiBarangs\Schemas;
 
+use App\Models\Ruang;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -22,29 +24,74 @@ class TransaksiBarangForm
                     ->default(fn () => 'TRX-' . strtoupper(substr(uniqid(), -6))),
                 Select::make('master_barang_id')
                     ->relationship('masterBarang', 'nama_barang')
-                    ->required(),
-                TextInput::make('lokasi_tujuan')
-                    ->required(),
-                DatePicker::make('tanggal_transaksi')
-                    ->required(),
-                TextInput::make('jumlah')
                     ->required()
-                    ->numeric(),
-                TextInput::make('penanggung_jawab'),
+                    ->columnSpanFull(),
+                DatePicker::make('tanggal_transaksi')
+                    ->label('Tanggal Transaksi')
+                    ->required(),
+                TextInput::make('penanggung_jawab')
+                    ->label('Penanggung Jawab'),
                 Textarea::make('keterangan')
                     ->columnSpanFull(),
+                
+                // Distribusi Ruang dengan Jumlah
+                Repeater::make('distribusi_lokasi')
+                    ->label('Distribusi Ruang')
+                    ->schema([
+                        Select::make('ruang_id')
+                            ->label('Ruang')
+                            ->options(Ruang::pluck('nama_ruang', 'id'))
+                            ->searchable()
+                            ->preload()
+                            ->required()
+                            ->disableOptionWhen(function ($value, $state, $get) {
+                                // Get parent distribusi_lokasi array
+                                $parent = $get('../..');
+                                $allDistribusi = $parent['distribusi_lokasi'] ?? [];
+                                
+                                // Get all ruang_id values except the current row
+                                $selectedRuang = collect($allDistribusi)
+                                    ->reject(fn ($item) => ($item['ruang_id'] ?? null) === null)
+                                    ->reject(fn ($item, $key) => $item === $state) // Exclude current row
+                                    ->pluck('ruang_id')
+                                    ->toArray();
+                                
+                                return in_array($value, $selectedRuang, true);
+                            })
+                            ->columnSpan(2),
+                        TextInput::make('jumlah')
+                            ->label('Jumlah')
+                            ->numeric()
+                            ->minValue(1)
+                            ->required(),
+                    ])
+                    ->columns(3)
+                    ->defaultItems(1)
+                    ->addActionLabel('+ Tambah Ruang')
+                    ->reorderable(false)
+                    ->columnSpanFull(),
+                
                 Select::make('user_id')
                     ->relationship('user', 'name')
-                    ->required(),
+                    ->dehydrated()
+                    ->hidden()
+                    ->default(fn () => auth()->id()),
                 TextInput::make('approved_by')
-                    ->numeric(),
-                DateTimePicker::make('approved_at'),
+                    ->numeric()
+                    ->hidden()
+                    ->dehydrated(false),
+                DateTimePicker::make('approved_at')
+                    ->hidden()
+                    ->dehydrated(false),
                 Select::make('approval_status')
                     ->options(['pending' => 'Pending', 'approved' => 'Approved', 'rejected' => 'Rejected'])
                     ->default('pending')
-                    ->required(),
+                    ->hidden()
+                    ->dehydrated(),
                 Textarea::make('approval_notes')
-                    ->columnSpanFull(),
+                    ->columnSpanFull()
+                    ->hidden()
+                    ->dehydrated(false),
             ]);
     }
 }

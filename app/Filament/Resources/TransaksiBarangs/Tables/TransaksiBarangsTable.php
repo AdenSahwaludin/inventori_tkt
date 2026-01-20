@@ -27,18 +27,10 @@ class TransaksiBarangsTable
                     ->label('Barang')
                     ->searchable()
                     ->wrap(),
-                TextColumn::make('lokasiTujuan.nama_lokasi')
-                    ->label('Lokasi Tujuan')
-                    ->searchable(),
                 TextColumn::make('tanggal_transaksi')
                     ->label('Tanggal')
                     ->date('d M Y')
                     ->sortable(),
-                TextColumn::make('jumlah')
-                    ->label('Jumlah')
-                    ->numeric()
-                    ->sortable()
-                    ->alignCenter(),
                 TextColumn::make('penanggung_jawab')
                     ->label('P. Jawab')
                     ->searchable()
