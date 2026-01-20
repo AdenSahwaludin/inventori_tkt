@@ -23,18 +23,13 @@ class MasterBarangsTable
                     ->searchable(),
                 TextColumn::make('nama_barang')
                     ->searchable(),
-                TextColumn::make('kategori.kode_kategori')
+                TextColumn::make('kategori.nama_kategori')
+                    ->label('Kategori')
                     ->searchable(),
                 TextColumn::make('satuan')
                     ->searchable(),
                 TextColumn::make('merk')
                     ->searchable(),
-                TextColumn::make('harga_satuan')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('reorder_point')
-                    ->numeric()
-                    ->sortable(),
                 TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
