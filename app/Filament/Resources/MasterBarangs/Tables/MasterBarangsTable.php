@@ -22,14 +22,14 @@ class MasterBarangsTable
                 TextColumn::make('kode_master')
                     ->searchable(),
                 TextColumn::make('nama_barang')
-                    ->searchable(),
+                    ->searchable()->sortable(),
                 TextColumn::make('kategori.nama_kategori')
                     ->label('Kategori')
-                    ->searchable(),
+                    ->searchable()->sortable(),
                 TextColumn::make('satuan')
-                    ->searchable(),
+                    ->searchable()->sortable(),
                 TextColumn::make('merk')
-                    ->searchable(),
+                    ->searchable()->sortable(),
                 TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
