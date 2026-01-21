@@ -16,16 +16,21 @@ class BarangRusakForm
             ->components([
                 Select::make('unit_barang_id')
                     ->relationship('unitBarang', 'kode_unit')
-                    ->required(),
+                    ->required()
+                    ->searchable()
+                    ->preload(),
                 DatePicker::make('tanggal_kejadian')
+                    ->label('Tanggal Kejadian')
                     ->required(),
                 Textarea::make('keterangan')
                     ->columnSpanFull(),
                 TextInput::make('penanggung_jawab')
                     ->required(),
-                Select::make('user_id')
-                    ->relationship('user', 'name')
-                    ->required(),
+                TextInput::make('user_id')
+                    ->label('User')
+                    ->default(fn () => auth()->id())
+                    ->dehydrated()
+                    ->hidden(),
             ]);
     }
 }

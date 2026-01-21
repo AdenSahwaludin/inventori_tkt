@@ -4,11 +4,13 @@ namespace App\Providers;
 
 use App\Models\BarangRusak;
 use App\Models\MasterBarang;
+use App\Models\MutasiLokasi;
 use App\Models\TransaksiBarang;
 use App\Models\TransaksiKeluar;
 use App\Models\UnitBarang;
 use App\Observers\BarangRusakObserver;
 use App\Observers\MasterBarangObserver;
+use App\Observers\MutasiLokasiObserver;
 use App\Observers\TransaksiBarangObserver;
 use App\Observers\TransaksiKeluarObserver;
 use App\Observers\UnitBarangObserver;
@@ -35,5 +37,6 @@ class AppServiceProvider extends ServiceProvider
         TransaksiKeluar::observe(TransaksiKeluarObserver::class);
         UnitBarang::observe(UnitBarangObserver::class);
         BarangRusak::observe(BarangRusakObserver::class);
+        MutasiLokasi::observe(MutasiLokasiObserver::class);
     }
 }

@@ -27,12 +27,16 @@ class TransaksiChartWidget extends ChartWidget
             $date = Carbon::now()->subMonths($i);
             $months->push($date->translatedFormat('M Y'));
 
-            $transaksiMasuk->push(
-                TransaksiBarang::where('approval_status', 'approved')
-                    ->whereYear('tanggal_transaksi', $date->year)
-                    ->whereMonth('tanggal_transaksi', $date->month)
-                    ->sum('jumlah')
-            );
+            // Hitung total jumlah dari distribusi_lokasi JSON
+            $transaksiMasukCount = TransaksiBarang::where('approval_status', 'approved')
+                ->whereYear('tanggal_transaksi', $date->year)
+                ->whereMonth('tanggal_transaksi', $date->month)
+                ->get()
+                ->sum(function ($transaksi) {
+                    return collect($transaksi->distribusi_lokasi ?? [])->sum('jumlah');
+                });
+
+            $transaksiMasuk->push($transaksiMasukCount);
 
             $transaksiKeluar->push(
                 TransaksiKeluar::where('approval_status', 'approved')

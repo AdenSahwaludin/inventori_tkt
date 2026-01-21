@@ -52,7 +52,7 @@ class TransaksiKeluarObserver
     }
 
     /**
-     * Handle approval: Update status unit_barang ke 'dipinjam'.
+     * Handle approval: Update status dan ruang unit_barang sesuai tipe transaksi.
      */
     protected function handleApproval(TransaksiKeluar $transaksi): void
     {
@@ -65,14 +65,33 @@ class TransaksiKeluarObserver
         }
         $transaksi->saveQuietly();
 
-        // Update status unit_barang
-        UnitBarang::where('kode_unit', $transaksi->unit_barang_id)
-            ->update(['status' => UnitBarang::STATUS_DIPINJAM]);
+        // Get unit barang
+        $unit = UnitBarang::where('kode_unit', $transaksi->unit_barang_id)->first();
+        
+        if (! $unit) {
+            return;
+        }
+
+        // Update berdasarkan tipe transaksi
+        if ($transaksi->tipe === TransaksiKeluar::TIPE_PEMINDAHAN) {
+            // Pemindahan: ubah ruang_id ke ruang tujuan
+            $unit->update([
+                'ruang_id' => $transaksi->ruang_tujuan_id,
+                'status' => UnitBarang::STATUS_BAIK,
+            ]);
+            $message = "Transaksi pemindahan {$transaksi->kode_transaksi} disetujui. Unit {$transaksi->unit_barang_id} dipindahkan ke ruang {$unit->ruangTujuan?->nama_ruang}.";
+        } else {
+            // Peminjaman/Penggunaan/Penghapusan: ubah status, jangan ubah ruang
+            $unit->update([
+                'status' => UnitBarang::STATUS_DIPINJAM,
+            ]);
+            $message = "Transaksi {$transaksi->tipe} {$transaksi->kode_transaksi} disetujui. Unit {$transaksi->unit_barang_id} status berubah ke 'dipinjam'.";
+        }
 
         // Log aktivitas approval
         LogAktivitas::log(
             LogAktivitas::TYPE_UPDATE,
-            "Transaksi keluar {$transaksi->kode_transaksi} disetujui. Unit {$transaksi->unit_barang_id} status berubah ke 'dipinjam'.",
+            $message,
             'transaksi_keluar',
             (string) $transaksi->id
         );
@@ -83,6 +102,25 @@ class TransaksiKeluarObserver
      */
     public function deleted(TransaksiKeluar $transaksi): void
     {
+        // Jika transaksi sudah approved (sudah punya approval_at), kembalikan unit barang
+        if ($transaksi->approval_status === TransaksiKeluar::STATUS_APPROVED && $transaksi->approved_at) {
+            $unit = UnitBarang::where('kode_unit', $transaksi->unit_barang_id)->first();
+            
+            if ($unit) {
+                if ($transaksi->tipe === TransaksiKeluar::TIPE_PEMINDAHAN) {
+                    // Pemindahan dihapus: kembalikan ke ruang asal
+                    $unit->update([
+                        'ruang_id' => $transaksi->ruang_asal_id,
+                    ]);
+                } else {
+                    // Peminjaman/Penggunaan dihapus: kembalikan status ke baik
+                    $unit->update([
+                        'status' => UnitBarang::STATUS_BAIK,
+                    ]);
+                }
+            }
+        }
+
         LogAktivitas::log(
             LogAktivitas::TYPE_DELETE,
             "Transaksi keluar dihapus: {$transaksi->kode_transaksi}",

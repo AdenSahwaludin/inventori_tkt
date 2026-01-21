@@ -41,12 +41,12 @@ class BarangStokRendahWidget extends BaseWidget
                     ->label('Kategori')
                     ->sortable(),
                 TextColumn::make('unit_barang_count')
-                    ->label('Stok Tersedia')
+                    ->label('Total Barang')
                     ->alignCenter()
                     ->badge()
                     ->color('danger'),
                 TextColumn::make('reorder_point')
-                    ->label('Min. Stok')
+                    ->label('Minimum Barang')
                     ->alignCenter(),
             ])
             ->paginated([5]);

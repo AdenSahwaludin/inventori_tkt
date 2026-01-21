@@ -8,7 +8,6 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Get;
 use Filament\Schemas\Schema;
 
 class TransaksiKeluarForm
@@ -60,19 +59,29 @@ class TransaksiKeluarForm
                     ->relationship('ruangTujuan', 'nama_ruang')
                     ->searchable()
                     ->preload()
-                    ->visible(fn (Get $get) => in_array($get('tipe'), ['pemindahan']))
-                    ->required(fn (Get $get) => $get('tipe') === 'pemindahan'),
+                    ->visible(function ($state, callable $get) {
+                        return in_array($get('tipe'), ['pemindahan']);
+                    })
+                    ->required(function ($state, callable $get) {
+                        return $get('tipe') === 'pemindahan';
+                    }),
                 DatePicker::make('tanggal_transaksi')
                     ->label('Tanggal Transaksi')
                     ->default(now())
                     ->required(),
                 TextInput::make('penerima')
                     ->label('Penerima')
-                    ->required(fn (Get $get) => in_array($get('tipe'), ['peminjaman', 'penggunaan']))
-                    ->visible(fn (Get $get) => in_array($get('tipe'), ['peminjaman', 'penggunaan', 'penghapusan'])),
+                    ->required(function ($state, callable $get) {
+                        return in_array($get('tipe'), ['peminjaman', 'penggunaan']);
+                    })
+                    ->visible(function ($state, callable $get) {
+                        return in_array($get('tipe'), ['peminjaman', 'penggunaan', 'penghapusan']);
+                    }),
                 TextInput::make('tujuan')
                     ->label('Tujuan Penggunaan')
-                    ->visible(fn (Get $get) => in_array($get('tipe'), ['peminjaman', 'penggunaan'])),
+                    ->visible(function ($state, callable $get) {
+                        return in_array($get('tipe'), ['peminjaman', 'penggunaan']);
+                    }),
                 Textarea::make('keterangan')
                     ->label('Keterangan')
                     ->columnSpanFull(),

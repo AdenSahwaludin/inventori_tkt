@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\MutasiLokasis\Schemas;
 
+use App\Models\UnitBarang;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -16,20 +17,38 @@ class MutasiLokasiForm
             ->components([
                 Select::make('unit_barang_id')
                     ->relationship('unitBarang', 'kode_unit')
-                    ->required(),
+                    ->required()
+                    ->searchable()
+                    ->preload()
+                    ->live()
+                    ->afterStateUpdated(function ($state, callable $set) {
+                        if ($state) {
+                            $unit = UnitBarang::find($state);
+                            $set('ruang_asal_id', $unit?->ruang_id);
+                        }
+                    }),
                 Select::make('ruang_asal_id')
+                    ->label('Ruang Asal')
                     ->relationship('ruangAsal', 'nama_ruang')
-                    ->required(),
+                    ->disabled()
+                    ->dehydrated()
+                    ->helperText('Otomatis terisi dari lokasi unit barang'),
                 Select::make('ruang_tujuan_id')
+                    ->label('Ruang Tujuan')
                     ->relationship('ruangTujuan', 'nama_ruang')
-                    ->required(),
+                    ->required()
+                    ->searchable()
+                    ->preload(),
                 DatePicker::make('tanggal_mutasi')
+                    ->label('Tanggal Mutasi')
                     ->required(),
                 Textarea::make('keterangan')
                     ->columnSpanFull(),
-                Select::make('user_id')
-                    ->relationship('user', 'name')
-                    ->required(),
+                TextInput::make('user_id')
+                    ->label('User')
+                    ->default(fn () => auth()->id())
+                    ->dehydrated()
+                    ->hidden(),
             ]);
     }
 }
