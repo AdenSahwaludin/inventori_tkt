@@ -60,6 +60,9 @@ class RolePermissionSeeder extends Seeder
 
             // Mutasi Lokasi
             'view_mutasi_lokasis',
+            'create_mutasi_lokasis',
+            'edit_mutasi_lokasis',
+            'delete_mutasi_lokasis',
 
             // Log Aktivitas
             'view_log_aktivitas',
@@ -138,6 +141,11 @@ class RolePermissionSeeder extends Seeder
             'edit_transaksi_barangs',
             'create_transaksi_keluars',
             'edit_transaksi_keluars',
+
+            // Mutasi Lokasi
+            'create_mutasi_lokasis',
+            'edit_mutasi_lokasis',
+            'delete_mutasi_lokasis',
 
             // Barang Rusak
             'create_barang_rusaks',
