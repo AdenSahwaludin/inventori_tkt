@@ -159,16 +159,38 @@ class TKSeederSekolah extends Seeder
         $adminUser = \App\Models\User::first();
         $createdBy = $adminUser?->id ?? 1;
         $ruangsMap = Ruang::all()->keyBy('nama_ruang');
+        
+        // Mapping kategori untuk extract code (3 huruf pertama dari nama kategori)
+        $kategoriCode = [
+            'Mainan Edukatif' => 'MAI',
+            'Alat Tulis & Kertas' => 'ALT',
+            'Furniture Anak' => 'FUR',
+            'Peralatan Olahraga' => 'OLA',
+            'Alat Musik' => 'MUS',
+            'Perlengkapan Seni' => 'SEN',
+            'Peralatan Kebersihan' => 'KEB',
+            'Alat Pembelajaran' => 'PEM',
+        ];
 
         foreach ($masterBarangs as $barangData) {
             $masterBarang = MasterBarang::create($barangData);
             $namaBarang = $masterBarang->nama_barang;
             $masterBarangId = $masterBarang->kode_master;  // PRIMARY KEY adalah kode_master, bukan id!
             
+            // Get 3 huruf pertama dari nama barang
+            $namaCode = strtoupper(substr(preg_replace('/[^A-Za-z]/', '', $namaBarang), 0, 3));
+            
+            // Get kategori code
+            $kategoriName = $barangData['kategori_id'];
+            // Lookup kategori by kode_kategori untuk dapat nama
+            $kategoriModel = Kategori::where('kode_kategori', $kategoriName)->first();
+            $katCode = $kategoriCode[$kategoriModel->nama_kategori] ?? 'CAT';
+            
             // Get target ruang untuk barang ini
             $targetRuangs = $distributionMap[$namaBarang] ?? ['Gudang'];
             $totalPesanan = $masterBarang->total_pesanan;
             $unitsPerRuang = (int)ceil($totalPesanan / count($targetRuangs));
+            $unitNumberPerBarang = 1;
 
             foreach ($targetRuangs as $namaRuang) {
                 $ruang = $ruangsMap[$namaRuang] ?? null;
@@ -177,8 +199,9 @@ class TKSeederSekolah extends Seeder
                 $unitsForRuang = min($unitsPerRuang, $totalPesanan);
 
                 for ($i = 0; $i < $unitsForRuang; $i++) {
-                    $kodeUnit = 'UNT-' . str_pad($unitNumber, 4, '0', STR_PAD_LEFT) . '-' . date('ymd');
-                    $unitNumber++;
+                    // Format: NAM-KAT-001 (e.g., KUA-PER-001)
+                    $kodeUnit = $namaCode . '-' . $katCode . '-' . str_pad($unitNumberPerBarang, 3, '0', STR_PAD_LEFT);
+                    $unitNumberPerBarang++;
 
                     // Insert langsung ke database untuk bypass observer
                     \DB::table('unit_barang')->insert([
