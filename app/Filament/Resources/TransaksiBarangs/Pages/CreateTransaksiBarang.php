@@ -3,7 +3,9 @@
 namespace App\Filament\Resources\TransaksiBarangs\Pages;
 
 use App\Filament\Resources\TransaksiBarangs\TransaksiBarangResource;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
+use Illuminate\Validation\ValidationException;
 
 class CreateTransaksiBarang extends CreateRecord
 {
@@ -11,26 +13,26 @@ class CreateTransaksiBarang extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        $this->validateTotalPesanan($data);
+        $totalPesanan = (int) ($data['total_pesanan'] ?? 0);
+        if ($totalPesanan > 0) {
+            $distribusi = collect($data['distribusi_lokasi'] ?? []);
+            $total = $distribusi->sum('jumlah');
+
+            if ($total > $totalPesanan) {
+                Notification::make()
+                    ->title('Validasi Gagal')
+                    ->body("Total unit ({$total}) tidak boleh melebihi Total Pesanan ({$totalPesanan})")
+                    ->danger()
+                    ->send();
+
+                throw ValidationException::withMessages([
+                    'distribusi_lokasi' => "Total unit ({$total}) tidak boleh melebihi Total Pesanan ({$totalPesanan})",
+                ]);
+            }
+        }
+        
         $data['user_id'] = auth()->id();
         $data['approval_status'] = 'pending';
         return $data;
-    }
-
-    private function validateTotalPesanan(array $data): void
-    {
-        $totalPesanan = (int) ($data['total_pesanan'] ?? 0);
-        if ($totalPesanan <= 0) {
-            return;
-        }
-
-        $distribusi = collect($data['distribusi_lokasi'] ?? []);
-        $total = $distribusi->sum('jumlah');
-
-        if ($total > $totalPesanan) {
-            throw \Illuminate\Validation\ValidationException::withMessages([
-                'distribusi_lokasi' => "Total unit ({$total}) tidak boleh melebihi Total Pesanan ({$totalPesanan})",
-            ]);
-        }
     }
 }
