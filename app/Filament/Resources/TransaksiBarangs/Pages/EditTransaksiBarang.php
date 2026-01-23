@@ -45,10 +45,10 @@ class EditTransaksiBarang extends EditRecord
 
         if ($total > $totalPesanan) {
             Notification::make()
-                ->title('❌ Validasi Gagal')
+                ->title('Validasi Gagal')
                 ->body("Total unit ({$total}) tidak boleh melebihi Total Pesanan ({$totalPesanan})")
                 ->danger()
-                ->persistent()
+
                 ->send();
 
             throw ValidationException::withMessages([
