@@ -43,6 +43,7 @@ class MasterBarang extends Model
         'merk',
         'harga_satuan',
         'reorder_point',
+        'total_pesanan',
         'deskripsi',
         'distribusi_lokasi',
         'created_by',
@@ -54,6 +55,7 @@ class MasterBarang extends Model
     protected $casts = [
         'harga_satuan' => 'decimal:2',
         'reorder_point' => 'integer',
+        'total_pesanan' => 'integer',
         'distribusi_lokasi' => 'array',
     ];
 

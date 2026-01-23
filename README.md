@@ -1,11 +1,89 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# TKT Edward Baru - Sistem Inventaris Barang
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistem manajemen inventaris barang berbasis **Laravel 12** dan **Filament 4.0** untuk mengelola stok barang, transaksi masuk/keluar, dan tracking lokasi penyimpanan.
+
+## Instalasi
+
+### 1. Clone Repository
+
+```bash
+git clone https://github.com/adensahwaludin/tkt-edward-baru.git
+cd tkt-edward-baru
+```
+
+### 2. Install Dependencies
+
+```bash
+composer install
+npm install
+```
+
+### 3. Setup Environment
+
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+
+### 4. Configure Database
+
+Edit file `.env` dan sesuaikan konfigurasi database:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=tkt_edward
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+### 5. Jalankan Migration & Seeder
+
+```bash
+php artisan migrate
+php artisan db:seed --class=RolePermissionSeeder
+```
+
+### 6. Build Assets
+
+```bash
+npm run build
+```
+
+## Menjalankan Project
+
+### Development
+
+```bash
+php artisan serve
+npm run dev
+```
+
+Akses aplikasi di: `http://localhost:8000`
+
+### Akun Default
+
+- **Admin**: admin@gmail.com / password
+- **Petugas Inventaris**: petugas@gmail.com / password
+
+## Fitur Utama
+
+- ✅ Manajemen Master Data (Kategori, Lokasi, Barang)
+- ✅ Tracking Unit Barang per Lokasi
+- ✅ Transaksi Barang Masuk (dengan distribusi multi-lokasi)
+- ✅ Transaksi Barang Keluar & Pemindahan
+- ✅ Mutasi Lokasi Barang
+- ✅ Recording Barang Rusak
+- ✅ Dashboard dengan Visualisasi Data
+- ✅ Manajemen User & Permission Role-Based
+
+## Tech Stack
+
+- **Framework**: Laravel 12.47.0
+- **Admin UI**: Filament 4.0.0
+- **Database**: MySQL
+- **Frontend**: Alpine.js + Tailwind CSS
 
 ## About Laravel
 

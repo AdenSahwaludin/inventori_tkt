@@ -55,6 +55,13 @@ class MasterBarangForm
                     ->numeric()
                     ->default(0)
                     ->helperText('Alert akan muncul jika stok di bawah nilai ini'),
+                TextInput::make('total_pesanan')
+                    ->label('Total Pesanan')
+                    ->numeric()
+                    ->default(0)
+                    ->minValue(0)
+                    ->helperText('Maksimal jumlah unit yang akan dipesan di semua ruang')
+                    ->columnSpan(1),
                 Textarea::make('deskripsi')
                     ->label('Deskripsi')
                     ->columnSpanFull(),
@@ -95,7 +102,17 @@ class MasterBarangForm
                     ->defaultItems(1)
                     ->addActionLabel('+ Tambah Ruang')
                     ->reorderable(false)
-                    ->columnSpanFull(),
+                    ->columnSpanFull()
+                    ->live()
+                    ->afterStateUpdated(function ($state, $set, $record, callable $get) {
+                        $totalPesanan = (int) $get('total_pesanan');
+                        if ($totalPesanan <= 0) {
+                            return;
+                        }
+                        
+                        $currentTotal = collect($state ?? [])->sum('jumlah');
+                    })
+                    ->validationAttribute('Distribusi Ruang'),
             ]);
     }
 }

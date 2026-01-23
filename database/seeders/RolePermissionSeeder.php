@@ -24,11 +24,11 @@ class RolePermissionSeeder extends Seeder
             'edit_kategoris',
             'delete_kategoris',
 
-            // Lokasi
-            'view_lokasis',
-            'create_lokasis',
-            'edit_lokasis',
-            'delete_lokasis',
+            // Ruang
+            'view_ruangs',
+            'create_ruangs',
+            'edit_ruangs',
+            'delete_ruangs',
 
             // Master Barang
             'view_master_barangs',
@@ -97,7 +97,7 @@ class RolePermissionSeeder extends Seeder
         $kepalaSekolahRole->givePermissionTo([
             // View All
             'view_kategoris',
-            'view_lokasis',
+            'view_ruangs',
             'view_master_barangs',
             'view_unit_barangs',
             'view_transaksi_barangs',
@@ -121,7 +121,7 @@ class RolePermissionSeeder extends Seeder
         $petugasRole->givePermissionTo([
             // View
             'view_kategoris',
-            'view_lokasis',
+            'view_ruangs',
             'view_master_barangs',
             'view_unit_barangs',
             'view_transaksi_barangs',
@@ -131,6 +131,12 @@ class RolePermissionSeeder extends Seeder
             'view_log_aktivitas',
 
             // Create/Edit Master Data
+            'create_kategoris',
+            'edit_kategoris',
+            'delete_kategoris',
+            'create_ruangs',
+            'edit_ruangs',
+            'delete_ruangs',
             'create_master_barangs',
             'edit_master_barangs',
             'create_unit_barangs',

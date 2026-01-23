@@ -32,6 +32,7 @@ class TransaksiBarang extends Model
         'tanggal_transaksi',
         'penanggung_jawab',
         'keterangan',
+        'total_pesanan',
         'user_id',
         'approved_by',
         'approved_at',
@@ -45,6 +46,7 @@ class TransaksiBarang extends Model
     protected $casts = [
         'tanggal_transaksi' => 'date',
         'approved_at' => 'datetime',
+        'total_pesanan' => 'integer',
         'distribusi_lokasi' => 'json',
     ];
 

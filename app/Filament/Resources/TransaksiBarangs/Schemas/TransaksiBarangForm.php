@@ -33,6 +33,13 @@ class TransaksiBarangForm
                     ->label('Penanggung Jawab'),
                 Textarea::make('keterangan')
                     ->columnSpanFull(),
+                TextInput::make('total_pesanan')
+                    ->label('Total Pesanan')
+                    ->numeric()
+                    ->default(0)
+                    ->minValue(0)
+                    ->helperText('Maksimal jumlah unit yang akan dipesan di semua ruang')
+                    ->columnSpan(1),
                 
                 // Distribusi Ruang dengan Jumlah
                 Repeater::make('distribusi_lokasi')
@@ -69,7 +76,17 @@ class TransaksiBarangForm
                     ->defaultItems(1)
                     ->addActionLabel('+ Tambah Ruang')
                     ->reorderable(false)
-                    ->columnSpanFull(),
+                    ->columnSpanFull()
+                    ->live()
+                    ->afterStateUpdated(function ($state, $set, $record, callable $get) {
+                        $totalPesanan = (int) $get('total_pesanan');
+                        if ($totalPesanan <= 0) {
+                            return;
+                        }
+                        
+                        $currentTotal = collect($state ?? [])->sum('jumlah');
+                    })
+                    ->validationAttribute('Distribusi Ruang'),
                 
                 Select::make('user_id')
                     ->relationship('user', 'name')
