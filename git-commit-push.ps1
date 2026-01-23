@@ -45,7 +45,7 @@ try {
     Write-Host ""
 
     # Step 2: Git Commit
-    Write-Host "💾 Running: git commit -m '$Message'" -ForegroundColor Green
+    Write-Host "💾 Running: git commit -m (message)" -ForegroundColor Green
     git commit -m $Message
     if ($LASTEXITCODE -ne 0) {
         throw "git commit failed"
@@ -53,9 +53,9 @@ try {
     Write-Host "✅ Commit created successfully" -ForegroundColor Green
     Write-Host ""
 
-    # Step 3: Git Push
-    Write-Host "📤 Running: git push" -ForegroundColor Green
-    git push
+    # Step 3: Git Push to GitHub
+    Write-Host "📤 Running: git push origin main" -ForegroundColor Green
+    git push origin main
     if ($LASTEXITCODE -ne 0) {
         throw "git push failed"
     }
