@@ -110,7 +110,7 @@ class MasterBarangForm
                             return;
                         }
                         
-                        $currentTotal = collect($state ?? [])->sum('jumlah');
+                        $currentTotal = collect($state ?? [])->sum(fn($item) => (int)($item['jumlah'] ?? 0));
                     })
                     ->validationAttribute('Distribusi Ruang'),
             ]);

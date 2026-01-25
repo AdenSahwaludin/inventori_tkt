@@ -4,7 +4,6 @@ namespace App\Observers;
 
 use App\Models\LogAktivitas;
 use App\Models\MasterBarang;
-use App\Models\MutasiLokasi;
 use App\Models\UnitBarang;
 
 /**
@@ -45,17 +44,6 @@ class MasterBarangObserver
                         'is_active' => true,
                         'tanggal_pembelian' => now(),
                         'created_by' => auth()->id(),
-                    ]);
-
-                    // Log mutasi ruang untuk tracking (initial placement)
-                    MutasiLokasi::create([
-                        'unit_barang_id' => $kodeUnit,
-                        'ruang_asal_id' => null,
-                        'ruang_tujuan_id' => $ruangId,
-                        'tanggal_mutasi' => now(),
-                        'tipe_mutasi' => MutasiLokasi::TIPE_CREATE,
-                        'keterangan' => 'Penempatan awal saat create master barang',
-                        'user_id' => auth()->id(),
                     ]);
 
                     $unitCounter++;
